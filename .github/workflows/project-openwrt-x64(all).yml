@@ -8,7 +8,7 @@
 # <https://github.com/KFERMercer/OpenWrt-CI>
 #
 
-name: OpenWrt-project-openwrt-x64(all)
+name: project-openwrt-x64(all)
 
 on:
   push:
