@@ -224,7 +224,7 @@ jobs:
           CONFIG_PACKAGE_luci-app-diskman=y
           # CONFIG_PACKAGE_luci-app-dnscrypt-proxy is not set
           # CONFIG_PACKAGE_luci-app-dnsforwarder is not set
-          # CONFIG_PACKAGE_luci-app-dockerman is not set
+          CONFIG_PACKAGE_luci-app-dockerman=y
           # CONFIG_PACKAGE_luci-app-dump1090 is not set 
           # CONFIG_PACKAGE_luci-app-dynapoint is not set
           # CONFIG_PACKAGE_luci-app-e2guardian is not set
