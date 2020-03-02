@@ -1,4 +1,4 @@
-#openWrt-project-openwrt-x64(simple).yml
+#openWrt-project-openwrt-x64(all).yml
 #
 # This is free software, lisence use MIT.
 # 
@@ -8,7 +8,7 @@
 # <https://github.com/KFERMercer/OpenWrt-CI>
 #
 
-name: OpenWrt-project-openwrt-x64(simple)
+name: OpenWrt-project-openwrt-x64(all)
 
 on:
   push:
@@ -489,5 +489,5 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@master
         with:
-          name: OpenWrt firmware-project-openwrt-x64(simple)
+          name: OpenWrt firmware-project-openwrt-x64(all)
           path: ./bin/targets/
