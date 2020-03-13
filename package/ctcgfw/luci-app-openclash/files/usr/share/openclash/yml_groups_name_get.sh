@@ -13,31 +13,60 @@ fi
 
 if [ -f "$CFG_FILE" ]; then
    #检查关键字避免后续操作出错
-	 [ ! -z "$(grep "^ \{0,\}'Proxy':" "$CFG_FILE")" ] || [ ! -z "$(grep '^ \{0,\}"Proxy":' "$CFG_FILE")" ] && {
-	    sed -i "/^ \{0,\}\'Proxy\':/c\Proxy:" "$CFG_FILE"
-	    sed -i '/^ \{0,\}\"Proxy\":/c\Proxy:' "$CFG_FILE"
-	 }
-	 
-	 [ ! -z "$(grep "^ \{0,\}'proxy-provider':" "$CFG_FILE")" ] || [ ! -z "$(grep '^ \{0,\}"proxy-provider":' "$CFG_FILE")" ] && {
-	    sed -i "/^ \{0,\}\'proxy-provider\:'/c\proxy-provider:" "$3"
-	    sed -i '/^ \{0,\}\"proxy-provider\":/c\proxy-provider:' "$3"
-	 }
-	 
-	 [ ! -z "$(grep "^ \{0,\}'Proxy Group':" "$CFG_FILE")" ] || [ ! -z "$(grep '^ \{0,\}"Proxy Group":' "$CFG_FILE")" ] && {
-	    sed -i "/^ \{0,\}\'Proxy Group\':/c\Proxy Group:" "$CFG_FILE"
-	    sed -i '/^ \{0,\}\"Proxy Group\":/c\Proxy Group:' "$CFG_FILE"
-	 }
-	 
-	 [ ! -z "$(grep "^ \{0,\}'Rule':" "$CFG_FILE")" ] || [ ! -z "$(grep '^ \{0,\}"Rule":' "$CFG_FILE")" ] && {
-	    sed -i "/^ \{0,\}\'Rule\':/c\Rule:" "$CFG_FILE"
-	    sed -i '/^ \{0,\}\"Rule\":/c\Rule:' "$CFG_FILE"
-	 }
-	 
-	 [ ! -z "$(grep "^ \{0,\}'dns':" "$CFG_FILE")" ] || [ ! -z "$(grep '^ \{0,\}"dns":' "$CFG_FILE")" ] && {
-	    sed -i "/^ \{0,\}\'dns\':/c\dns:" "$CFG_FILE"
-	    sed -i '/^ \{0,\}\"dns\":/c\dns:' "$CFG_FILE"
-	 }
-	 
+   #proxies
+   [ -z "$(grep "^Proxy:" "$CFG_FILE")" ] && {
+      sed -i "s/^ \{0,\}\'Proxy\':/Proxy:/" "$CFG_FILE" 2>/dev/null
+      sed -i 's/^ \{0,\}\"Proxy\":/Proxy:/' "$CFG_FILE" 2>/dev/null
+      sed -i "s/^ \{1,\}Proxy:/c\Proxy:/" "$CFG_FILE" 2>/dev/null
+   }
+   [ -z "$(grep "^Proxy:" "$CFG_FILE")" ] && {
+      sed -i "s/^\'proxies\':/Proxy:/" "$CFG_FILE" 2>/dev/null
+      sed -i 's/^\"proxies\":/Proxy:/' "$CFG_FILE" 2>/dev/null
+      sed -i "s/^proxies:/Proxy:/" "$CFG_FILE" 2>/dev/null
+   }
+
+	 #proxy-providers
+	 [ -z "$(grep "^proxy-provider:" "$CFG_FILE")" ] && {
+      sed -i "s/^ \{0,\}\'proxy-provider\':/proxy-provider:/" "$CFG_FILE" 2>/dev/null
+      sed -i 's/^ \{0,\}\"proxy-provider\":/proxy-provider:/' "$CFG_FILE" 2>/dev/null
+      sed -i "s/^ \{1,\}proxy-provider:/proxy-provider:/" "$CFG_FILE" 2>/dev/null
+   }
+   [ -z "$(grep "^proxy-provider:" "$CFG_FILE")" ] && {
+      sed -i "/^ \{0,\}\'proxy-providers\':/c\proxy-provider:" "$CFG_FILE" 2>/dev/null
+      sed -i '/^ \{0,\}\"proxy-providers\":/c\proxy-provider:' "$CFG_FILE" 2>/dev/null
+      sed -i "/^ \{0,\}proxy-providers:/c\proxy-provider:" "$CFG_FILE" 2>/dev/null
+   }
+   #proxy-groups
+   [ -z "$(grep "^Proxy Group:" "$CFG_FILE")" ] && {
+      sed -i "s/^ \{0,\}\'Proxy Group\':/Proxy Group:/" "$CFG_FILE" 2>/dev/null
+      sed -i 's/^ \{0,\}\"Proxy Group\":/Proxy Group:/' "$CFG_FILE" 2>/dev/null
+      sed -i "s/^ \{1,\}Proxy Group:/Proxy Group:/" "$CFG_FILE" 2>/dev/null
+   }
+   [ -z "$(grep "^Proxy Group:" "$CFG_FILE")" ] && {
+      sed -i "s/^ \{0,\}\'proxy-groups\':/Proxy Group:/" "$CFG_FILE" 2>/dev/null
+      sed -i 's/^ \{0,\}\"proxy-groups\":/Proxy Group:/' "$CFG_FILE" 2>/dev/null
+      sed -i "s/^ \{0,\}proxy-groups:/Proxy Group:/" "$CFG_FILE" 2>/dev/null
+   }
+   
+   #rules
+   [ -z "$(grep "^Rule:" "$CFG_FILE")" ] && {
+      sed -i "s/^ \{0,\}\'Rule\':/Rule:/" "$CFG_FILE" 2>/dev/null
+      sed -i 's/^ \{0,\}\"Rule\":/Rule:/' "$CFG_FILE" 2>/dev/null
+      sed -i "s/^ \{1,\}Rule:/Rule:/" "$CFG_FILE" 2>/dev/null
+   }
+   [ -z "$(grep "^Rule:" "$CFG_FILE")" ] && {
+      sed -i "/^ \{0,\}\'rules\':/c\Rule:" "$CFG_FILE" 2>/dev/null
+      sed -i '/^ \{0,\}\"rules\":/c\Rule:' "$CFG_FILE" 2>/dev/null
+      sed -i "/^ \{0,\}rules:/c\Rule:" "$CFG_FILE" 2>/dev/null
+   }
+   
+   #dns
+   [ -z "$(grep "^dns:" "$CFG_FILE")" ] && {
+      sed -i "s/^ \{0,\}\'dns\':/dns:/" "$CFG_FILE" 2>/dev/null
+      sed -i 's/^ \{0,\}\"dns\":/dns:/' "$CFG_FILE" 2>/dev/null
+      sed -i "s/^ \{1,\}dns:/dns:/" "$CFG_FILE" 2>/dev/null
+   }
+   
 #判断各个区位置
    group_len=$(sed -n '/^ \{0,\}Proxy Group:/=' "$CONFIG_FILE" 2>/dev/null)
    provider_len=$(sed -n '/^ \{0,\}proxy-provider:/=' "$CONFIG_FILE" 2>/dev/null)

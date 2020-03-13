@@ -76,6 +76,10 @@ o:value("ssr", translate("ShadowsocksR"))
 if nixio.fs.access("/usr/bin/ss-redir") then
 o:value("ss", translate("Shadowsocks"))
 end
+
+if nixio.fs.access("/usr/bin/ipt2socks") then
+o:value("socks5", translate("Socks5"))
+end
 o.description = translate(
                     "Using incorrect encryption mothod may causes service fail to start")
 
@@ -99,12 +103,23 @@ o.rmempty = false
 -- o.default = 60
 -- o.rmempty = false
 
+o = s:option(Flag, "auth_enable", translate("Enable Authentication"))
+o.rmempty = false
+o.default = "0"
+o:depends("type", "socks5")
+
+o = s:option(Value, "username", translate("Username"))
+o.rmempty = true
+o:depends("type", "socks5")
+
+
 o = s:option(Value, "password", translate("Password"))
 o.password = true
 o.rmempty = true
 o:depends("type", "ssr")
 o:depends("type", "ss")
 o:depends("type", "trojan")
+o:depends("type", "socks5")
 
 
 o = s:option(ListValue, "encrypt_method", translate("Encrypt Method"))
@@ -314,6 +329,13 @@ o = s:option(Flag, "tls", translate("TLS"))
 o.rmempty = true
 o.default = "0"
 o:depends("type", "v2ray")
+o:depends("type", "trojan")
+
+o = s:option(Value, "tls_host", translate("TLS Host"))
+--o:depends("type", "trojan")
+o:depends("tls", "1")
+o.rmempty = true
+
 
 -- [[ Mux ]]--
 o = s:option(Flag, "mux", translate("Mux"))

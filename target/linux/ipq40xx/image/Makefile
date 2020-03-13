@@ -52,6 +52,22 @@ define Device/DniImage
 endef
 DEVICE_VARS += NETGEAR_BOARD_ID NETGEAR_HW_ID
 
+define Build/mkmylofw_32m
+	$(eval device_id=$(word 1,$(1)))
+	$(eval revision=$(word 2,$(1)))
+
+	let \
+		size="$$(stat -c%s $@)" \
+		pad="$(subst k,* 1024,$(BLOCKSIZE))" \
+		pad="(pad - (size % pad)) % pad" \
+		newsize='size + pad'; \
+		$(STAGING_DIR_HOST)/bin/mkmylofw \
+		-B WPE72 -i 0x11f6:$(device_id):0x11f6:$(device_id) -r $(revision) \
+		-s 0x2000000 -p0x180000:$$newsize:al:0x80208000:"OpenWrt":$@ \
+		$@.new
+	@mv $@.new $@
+endef
+
 define Build/SenaoFW
 	-$(STAGING_DIR_HOST)/bin/mksenaofw \
 		-n $(BOARD_NAME) -r $(VENDOR_ID) -p $(1) \
@@ -205,8 +221,9 @@ define Device/compex_wpj428
 	BLOCKSIZE := 64k
 	IMAGE_SIZE := 31232k
 	KERNEL_SIZE := 4096k
-	IMAGES = sysupgrade.bin
+	IMAGES = sysupgrade.bin cpximg-6a04.bin
 	IMAGE/sysupgrade.bin := append-kernel | append-rootfs | pad-rootfs | append-metadata
+	IMAGE/cpximg-6a04.bin := append-kernel | append-rootfs | pad-rootfs | mkmylofw_32m 0x8A2 3
 	DEVICE_PACKAGES := kmod-gpio-beeper
 endef
 TARGET_DEVICES += compex_wpj428
@@ -257,6 +274,7 @@ define Device/glinet_gl-b1300
 	DEVICE_MODEL := GL-B1300
 	BOARD_NAME := gl-b1300
 	DEVICE_DTS := qcom-ipq4029-gl-b1300
+	BOARD_NAME := gl-b1300
 	KERNEL_SIZE := 4096k
 	IMAGE_SIZE := 26624k
 	IMAGES := sysupgrade.bin
@@ -266,7 +284,8 @@ TARGET_DEVICES += glinet_gl-b1300
 
 define Device/hugo_ac1200
 	$(call Device/FitImage)
-	DEVICE_TITLE := Hugo AC1200
+	DEVICE_VENDOR := Hugo
+	DEVICE_MODEL := AC1200
 	BOARD_NAME := hugo_ac1200
 	DEVICE_DTS := qcom-ipq4019-hugo-ac1200
 	KERNEL_SIZE := 4096k

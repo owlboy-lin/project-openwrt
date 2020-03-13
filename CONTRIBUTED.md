@@ -43,7 +43,12 @@ lua-maxminddb source: [jerrykuku/lua-maxminddb](https://github.com/jerrykuku/lua
 package openwrt-mwol: [Mleaf/openwrt-mwol](https://github.com/Mleaf/openwrt-mwol).<br/>
 package gargoyle: [ericpaulbishop/gargoyle](https://github.com/ericpaulbishop/gargoyle).<br/>
 luci-app-qos-gargoyle source: [kuoruan/luci-app-qos-gargoyle](https://github.com/kuoruan/luci-app-qos-gargoyle).<br/>
-luci-theme-rosy source: [rosywrt/luci-theme-rosy](https://github.com/rosywrt/luci-theme-rosy).
+luci-theme-rosy source: [rosywrt/luci-theme-rosy](https://github.com/rosywrt/luci-theme-rosy).<br/>
+luci-theme-argon-mc source: [sypopo/luci-theme-argon-mc](https://github.com/sypopo/luci-theme-argon-mc).<br/>
+luci-app-cupsd source: [F-Light/luci-app-cupsd](https://github.com/F-Light/luci-app-cupsd).<br/>
+ootoc-OpenWRT source: [ElonH/ootoc-OpenWRT](https://github.com/ElonH/ootoc-OpenWRT).<br/>
+r8168 source: [BROBIRD/openwrt-r8168](https://github.com/BROBIRD/openwrt-r8168).<br/>
+luci-theme-Butterfly-dark source: [Leo-Jo-My/luci-theme-Butterfly-dark](https://github.com/Leo-Jo-My/luci-theme-Butterfly-dark).
 
 ## License
 ### Depending on their own License.

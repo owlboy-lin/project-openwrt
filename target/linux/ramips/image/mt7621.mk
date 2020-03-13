@@ -87,6 +87,11 @@ define Build/netis-tail
 		sed 's/../\\\\x&/g' | xargs echo -ne >> $@
 endef
 
+define Build/ubootpad96
+	uimage_padhdr -i $@ -o $@.new -l 96
+	mv $@.new $@
+endef
+
 define Build/ubnt-erx-factory-image
 	if [ -e $(KDIR)/tmp/$(KERNEL_INITRAMFS_IMAGE) -a "$$(stat -c%s $@)" -lt "$(KERNEL_SIZE)" ]; then \
 		echo '21001:6' > $(1).compat; \
@@ -220,6 +225,22 @@ define Device/dlink_dir-860l-b1
 endef
 TARGET_DEVICES += dlink_dir-860l-b1
 
+define Device/dlink_dir-878-a1
+  BLOCKSIZE := 64k
+  IMAGE_SIZE := 16000k
+  DEVICE_VENDOR := D-Link
+  IMAGES += factory.bin
+  DEVICE_MODEL := DIR-878
+  DEVICE_VARIANT := A1
+  DEVICE_PACKAGES := luci-app-mtwifi
+  KERNEL_INITRAMFS := $$(KERNEL) | ubootpad96
+  IMAGE/sysupgrade.bin := append-kernel | append-rootfs | ubootpad96 |\
+	pad-rootfs |  check-size $$$$(IMAGE_SIZE) | append-metadata
+  IMAGE/factory.bin := append-kernel | append-rootfs | ubootpad96 |\
+	check-size $$$$(IMAGE_SIZE)
+endef
+TARGET_DEVICES += dlink_dir-878-a1
+
 define Device/d-team_newifi-d2
   IMAGE_SIZE := 32448k
   DEVICE_VENDOR := Newifi
@@ -332,7 +353,7 @@ TARGET_DEVICES += gnubee_gb-pc2
 define Device/hiwifi_hc5962
   BLOCKSIZE := 128k
   PAGESIZE := 2048
-  KERNEL_SIZE := 2097152
+  KERNEL_SIZE := 4096k
   UBINIZE_OPTS := -E 5
   IMAGE_SIZE := 32768k
   IMAGES += factory.bin
@@ -342,9 +363,6 @@ define Device/hiwifi_hc5962
   DEVICE_VENDOR := HiWiFi
   DEVICE_MODEL := HC5962
   DEVICE_PACKAGES := kmod-mt7603 kmod-mt76x2 kmod-usb3 wpad-openssl
-  SUPPORTED_DEVICES += hc5962
-  # Kernel partition too small
-  DEFAULT := n
 endef
 TARGET_DEVICES += hiwifi_hc5962
 
@@ -603,6 +621,21 @@ define Device/netgear_r6350
 endef
 TARGET_DEVICES += netgear_r6350
 
+define Device/netgear_r6700-v2
+  $(Device/netgear_sercomm_nand)
+  DEVICE_MODEL := R6700
+  DEVICE_VARIANT := v2
+  DEVICE_ALT0_VENDOR := NETGEAR
+  DEVICE_ALT0_MODEL := Nighthawk AC2400
+  SERCOMM_HWNAME := R6950
+  SERCOMM_HWID := BZV
+  SERCOMM_HWVER := A001
+  SERCOMM_SWVER := 0x1032
+  IMAGE_SIZE := 40960k
+  DEVICE_PACKAGES += kmod-mt7615e
+endef
+TARGET_DEVICES += netgear_r6700-v2
+
 define Device/netgear_r6800
   $(Device/netgear_sercomm_nand)
   DEVICE_MODEL := R6800
@@ -611,7 +644,7 @@ define Device/netgear_r6800
   SERCOMM_HWVER := A001
   SERCOMM_SWVER := 0x0062
   IMAGE_SIZE := 40960k
-  DEVICE_PACKAGES += kmod-mt7615e kmod-pinctrl-sx150x
+  DEVICE_PACKAGES += kmod-mt7615e
 endef
 TARGET_DEVICES += netgear_r6800
 
@@ -869,7 +902,7 @@ define Device/xiaomi_mir3p
   IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
   IMAGE/factory.bin := append-kernel | pad-to $$(KERNEL_SIZE) | append-ubi | \
 	check-size $$$$(IMAGE_SIZE)
-  DEVICE_PACKAGES := kmod-mt7615e kmod-usb3 kmod-usb-ledtrig-usbport \
+  DEVICE_PACKAGES := luci-app-mtwifi kmod-usb3 kmod-usb-ledtrig-usbport \
 	wpad-openssl uboot-envtools
 endef
 TARGET_DEVICES += xiaomi_mir3p

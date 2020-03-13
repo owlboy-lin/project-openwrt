@@ -47,13 +47,15 @@ end
               _("SSR Server"), 20).leaf = true
     end
 entry({"admin", "vpn", "vssr", "status"},form("vssr/status"),_("Status"), 23).leaf = true
-    entry({"admin", "vpn", "vssr", "log"}, cbi("vssr/log"), _("Log"), 30).leaf =
-        true
+    
+entry({"admin", "vpn", "vssr", "logview"}, cbi("vssr/logview", {hideapplybtn=true, hidesavebtn=true, hideresetbtn=true}), _("Log") ,80).leaf=true
+      
 
     entry({"admin", "vpn", "vssr", "refresh"}, call("refresh_data")) -- 更新白名单和GFWLIST
     entry({"admin", "vpn", "vssr", "checkport"}, call("check_port")) -- 检测单个端口并返回Ping
     entry({"admin", "vpn", "vssr", "checkports"}, call("check_ports"))
     entry({"admin", "vpn", "vssr", "ping"}, call("act_ping")).leaf=true
+   entry({"admin", "vpn", "vssr", "fileread"}, call("act_read"), nil).leaf=true
     entry({"admin", "vpn", "vssr", "run"}, call("act_status")) -- 检测全局服务器状态
     entry({"admin", "vpn", "vssr", "change"}, call("change_node")) -- 切换节点
     entry({"admin", "vpn", "vssr", "allserver"}, call("get_servers")) -- 获取所有节点Json
@@ -311,11 +313,7 @@ local set =luci.http.formvalue("set")
 local icount =0
 
 if set == "gfw_data" then
-if nixio.fs.access("/usr/bin/wget-ssl") then
 	refresh_cmd="wget-ssl --no-check-certificate https://cdn.jsdelivr.net/gh/gfwlist/gfwlist/gfwlist.txt -O /tmp/gfw.b64"
-	else
-		refresh_cmd="wget -O /tmp/gfw.b64 http://iytc.net/tools/list.b64"
-	end
 	sret=luci.sys.call(refresh_cmd .. " 2>/dev/null")
 	if sret== 0 then
 	luci.sys.call("/usr/bin/vssr-gfw")
@@ -324,6 +322,8 @@ if nixio.fs.access("/usr/bin/wget-ssl") then
 	oldcount=luci.sys.exec("cat /etc/dnsmasq.ssr/gfw_list.conf | wc -l")
 	if tonumber(icount) ~= tonumber(oldcount) then
 		luci.sys.exec("cp -f /tmp/gfwnew.txt /etc/dnsmasq.ssr/gfw_list.conf")
+		luci.sys.exec("cp -f /tmp/gfwnew.txt /tmp/dnsmasq.ssr/gfw_list.conf")
+		luci.sys.call("/etc/init.d/dnsmasq restart")
 		retstring=tostring(math.ceil(tonumber(icount)/2))
 	else
 		retstring ="0"
@@ -337,7 +337,7 @@ else
 end
 elseif set == "ip_data" then
 	if (luci.model.uci.cursor():get_first('vssr', 'global', 'chnroute', '0') == '1') then
-		refresh_cmd="wget-ssl --no-check-certificate -O - " .. luci.model.uci.cursor():get_first('vssr', 'global', 'chnroute_url', 'https://pexcn.me/daily/chnroute/chnroute.txt') .. ' > /tmp/china_ssr.txt 2>/dev/null'
+		refresh_cmd="wget-ssl --no-check-certificate -O - " .. luci.model.uci.cursor():get_first('vssr', 'global', 'chnroute_url', 'https://ispip.clang.cn/all_cn.txt') .. ' > /tmp/china_ssr.txt 2>/dev/null'
 	else
 		refresh_cmd="wget -O- 'http://ftp.apnic.net/apnic/stats/apnic/delegated-apnic-latest'  2>/dev/null| awk -F\\| '/CN\\|ipv4/ { printf(\"%s/%d\\n\", $4, 32-log($5)/log(2)) }' > /tmp/china_ssr.txt"
 	end
@@ -371,10 +371,9 @@ if sret== 0 then
 	end
 	if tonumber(icount) ~= tonumber(oldcount) then
 		luci.sys.exec("cp -f /tmp/ad.conf /etc/dnsmasq.ssr/ad.conf")
+		luci.sys.exec("cp -f /tmp/ad.conf /tmp/dnsmasq.ssr/ad.conf")
+		luci.sys.call("/etc/init.d/dnsmasq restart")
 		retstring=tostring(math.ceil(tonumber(icount)))
-		if oldcount==0 then
-		 luci.sys.call("/etc/init.d/dnsmasq restart")
-		end
 	else
 		retstring ="0"
 	end
@@ -389,6 +388,7 @@ end
 luci.http.prepare_content("application/json")
 luci.http.write_json({ ret=retstring ,retcount=icount})
 end
+
 
 
 -- 检测所有服务器
@@ -533,4 +533,17 @@ function get_flag()
     e.flag = luci.sys.exec(cmd1)
     luci.http.prepare_content("application/json")
     luci.http.write_json(e)
+end
+
+function act_read(lfile)
+	local NXFS = require "nixio.fs"
+	local HTTP = require "luci.http"
+	local lfile = HTTP.formvalue("lfile")
+	local ldata={}
+	ldata[#ldata+1] = NXFS.readfile(lfile) or "_nofile_"
+	if ldata[1] == "" then
+		ldata[1] = "_nodata_"
+	end
+	HTTP.prepare_content("application/json")
+	HTTP.write_json(ldata)
 end

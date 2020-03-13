@@ -32,16 +32,6 @@ function index()
 
 end
 local fs = require "luci.openclash"
-CONFIG_FILE=string.sub(luci.sys.exec("uci get openclash.config.config_path"), 1, -2)
-
-if CONFIG_FILE == "" or not fs.isfile(CONFIG_FILE) then
-   CONFIG_FILE_FIRST=luci.sys.exec("ls -lt '/etc/openclash/config/' | grep -E '.yaml|.yml' | head -n 1 |awk '{print $9}'")
-   if CONFIG_FILE_FIRST ~= "" then
-      CONFIG_FILE="/etc/openclash/config/" .. string.sub(CONFIG_FILE_FIRST, 1, -2)
-   else
-      CONFIG_FILE = ""
-   end
-end
 
 local function is_running()
 	return luci.sys.call("pidof clash >/dev/null") == 0
@@ -52,7 +42,7 @@ local function is_web()
 end
 
 local function is_watchdog()
-	return luci.sys.exec("ps |grep openclash_watchdog.sh |grep -v grep 2>/dev/null |sed -n 1p")
+	return luci.sys.call("ps |grep openclash_watchdog.sh |grep -v grep >/dev/null") == 0
 end
 
 local function cn_port()
@@ -61,14 +51,6 @@ end
 
 local function mode()
 	return luci.sys.exec("uci get openclash.config.en_mode 2>/dev/null")
-end
-
-local function config()
-   if CONFIG_FILE ~= "" then
-      return string.sub(CONFIG_FILE, 23, -1)
-   else
-      return "1"
-   end
 end
 
 local function ipdb()
@@ -88,7 +70,7 @@ local function ConnersHua_return()
 end
 
 local function daip()
-	return luci.sys.exec("uci get network.lan.ipaddr 2>/dev/null |awk -F '/' '{print $1}' 2>/dev/null |tr -d '\n'")
+        return luci.sys.exec("ifstatus lan 2>/dev/null |jsonfilter -e '@[\"ipv4-address\"][0].address' 2>/dev/null")
 end
 
 local function dase()
@@ -109,15 +91,12 @@ end
 
 local function coremodel()
   local coremodel = luci.sys.exec("cat /proc/cpuinfo |grep 'cpu model' 2>/dev/null |awk -F ': ' '{print $2}' 2>/dev/null")
+  local coremodel2 = luci.sys.exec("opkg status libc 2>/dev/null |grep 'Architecture' |awk -F ': ' '{print $2}' 2>/dev/null")
   if not coremodel or coremodel == "" then
-     return luci.sys.exec("opkg status libc 2>/dev/null |grep 'Architecture' |awk -F ': ' '{print $2}' 2>/dev/null")
+     return coremodel2 .. "," .. coremodel2
   else
-     return coremodel
+     return coremodel .. "," .. coremodel2
   end
-end
-
-local function coremodel2()
-	return luci.sys.exec("opkg status libc 2>/dev/null |grep 'Architecture' |awk -F ': ' '{print $2}' 2>/dev/null")
 end
 
 local function corecv()
@@ -131,7 +110,7 @@ end
 local function corelv()
 	local new = luci.sys.call(string.format("sh /usr/share/openclash/clash_version.sh"))
 	local core_lv = luci.sys.exec("sed -n 1p /tmp/clash_last_version 2>/dev/null")
-	return core_lv..","..new
+	return core_lv .. "," .. new
 end
 
 local function opcv()
@@ -139,7 +118,9 @@ local function opcv()
 end
 
 local function oplv()
-   return luci.sys.exec("sh /usr/share/openclash/openclash_version.sh && sed -n 1p /tmp/openclash_last_version 2>/dev/null |sed 's/^v//g' 2>/dev/null")
+	 local new = luci.sys.call(string.format("sh /usr/share/openclash/openclash_version.sh"))
+	 local oplv = luci.sys.exec("sed -n 1p /tmp/openclash_last_version 2>/dev/null")
+   return oplv .. "," .. new
 end
 
 local function opup()
@@ -191,7 +172,6 @@ end
 function action_state()
 	luci.http.prepare_content("application/json")
 	luci.http.write_json({
-		config = config(),
 		lhie1 = lhie1(),
 		ConnersHua = ConnersHua(),
 		ConnersHua_return = ConnersHua_return(),
@@ -224,7 +204,6 @@ function action_update()
 	luci.http.prepare_content("application/json")
 	luci.http.write_json({
 			coremodel = coremodel(),
-			coremodel2 = coremodel2(),
 			corecv = corecv(),
 			opcv = opcv(),
 			corever = corever(),

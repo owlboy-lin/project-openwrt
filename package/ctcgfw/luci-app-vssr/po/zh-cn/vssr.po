@@ -125,10 +125,10 @@ msgstr "个节点"
 msgid "Client"
 msgstr "客户端"
 
-msgid "Visit foreign websites"
+msgid "foreign websites"
 msgstr "国外网站"
 
-msgid "Visit domestic website"
+msgid "domestic website"
 msgstr "国内网站"
 
 msgid "Problem detected"
@@ -707,7 +707,7 @@ msgid "Using acceleration center DNS"
 msgstr "使用加速中心DNS"
 
 msgid "Appoint dns List"
-msgstr "指定DNS解析列表"
+msgstr "DNS解析列表"
 
 msgid "Use https_dns_proxy query and cache"
 msgstr "使用https_dns_proxy TCP查询并缓存"
@@ -746,7 +746,7 @@ msgid "UDPspeeder Project"
 msgstr "UDPspeeder 项目"
 
 msgid "Appointlist List"
-msgstr "加速列表"
+msgstr "DNS列表"
 
 msgid "udp2raw tunnel"
 msgstr "UDP隧道"
@@ -800,7 +800,7 @@ msgid "Plugin Opts"
 msgstr "插件参数"
 
 msgid "Before subscribing please click below to delete all servers in the subscription"
-msgstr "订阅前请点击下面的删除所有服务器在订阅"
+msgstr "使用此订阅前请删除所有服务器在订阅"
 
 msgid "Chnroute Setting"
 msgstr "国内IP段数据库更新设置"
@@ -838,6 +838,11 @@ msgstr "mtu参数"
 msgid "SS Servers"
 msgstr "SS服务器"
 
+msgid "Support AdGuardHome and DNSMASQ format list"
+msgstr "同时支持 AdGuard Home 和 DNSMASQ 格式的过滤列表"
+
+msgid "Running"
+msgstr "运行正常"
 
 msgid "SSR Servers"
 msgstr "SSR服务器"
@@ -846,7 +851,7 @@ msgid "SSR Server"
 msgstr "服务端"
 
 msgid "V2 Servers"
-msgstr "V2服务器"
+msgstr "V2RAY服务器"
 
 msgid "SS/SSR/V2RAY Server"
 msgstr "SS/SSR/V2RAY 服务端"
@@ -854,4 +859,17 @@ msgstr "SS/SSR/V2RAY 服务端"
 msgid "Delete All Subscribe Severs"
 msgstr "删除所有订阅服务器节点"
 
+msgid "Update All Subscribe Severs"
+msgstr "更新所有订阅服务器节点"
 
+msgid "No special needs, please click here to subscribe to update"
+msgstr "没有特殊需要，请点击这里订阅更新"
+
+msgid "Running Details:"
+msgstr "进程详情："
+
+msgid "File Viewer"
+msgstr "文件查看器"
+
+msgid "Enable Authentication"
+msgstr "启用 用户名/密码 认证"
