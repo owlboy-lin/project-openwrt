@@ -459,7 +459,7 @@ jobs:
           #CONFIG_PACKAGE_luci-theme-netgearv2 is not set
           CONFIG_PACKAGE_luci-theme-opentomato=y
           CONFIG_PACKAGE_luci-theme-opentomcat=y
-          CONFIG_PACKAGE_luci-theme-rosy=y
+          # CONFIG_PACKAGE_luci-theme-rosy is not set
           EOF
 
           # 常用软件包:
