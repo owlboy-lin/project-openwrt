@@ -59,7 +59,7 @@ jobs:
 
       - name: 同步最新的源码
         run: |
-          git remote add openwrt https://github.com/project-openwrt/packages.git
+          git remote add openwrt https://github.com/project-openwrt/openwrt.git
           git pull 
           git remote -v
                                     
