@@ -455,26 +455,16 @@ jobs:
           CONFIG_PACKAGE_luci-theme-rosy=y
           EOF
 
+
           # 常用软件包:
           cat >> .config <<EOF
-          # CONFIG_PACKAGE_luci-theme-Butterfly is not set
-          CONFIG_PACKAGE_luci-theme-Butterfly-dark=y
-          # CONFIG_PACKAGE_luci-theme-argon is not set
-          CONFIG_PACKAGE_luci-theme-argon-dark-mod=y
-          CONFIG_PACKAGE_luci-theme-argon-light-mod=y
-          # CONFIG_PACKAGE_luci-theme-argon-mc is not set
-          # CONFIG_PACKAGE_luci-theme-argonv2 is not set
-          CONFIG_PACKAGE_luci-theme-argonv3=y
-          CONFIG_PACKAGE_luci-theme-atmaterial=y
-          CONFIG_PACKAGE_luci-theme-bootstrap=y
-          # CONFIG_PACKAGE_luci-theme-bootstrap-mod is not set
-          CONFIG_PACKAGE_luci-theme-darkmatter=y
-          CONFIG_PACKAGE_luci-theme-material=y
-          # CONFIG_PACKAGE_luci-theme-netgear is not set
-          CONFIG_PACKAGE_luci-theme-netgearv2=y
-          # CONFIG_PACKAGE_luci-theme-opentomato is not set
-          CONFIG_PACKAGE_luci-theme-opentomcat=y
-          CONFIG_PACKAGE_luci-theme-rosy=y
+          CONFIG_PACKAGE_curl=y
+          CONFIG_PACKAGE_htop=y
+          CONFIG_PACKAGE_nano=y
+          CONFIG_PACKAGE_screen=y
+          CONFIG_PACKAGE_tree=y
+          CONFIG_PACKAGE_vim-fuller=y
+          CONFIG_PACKAGE_wget=y
           EOF
 
           # 取消编译VMware镜像以及镜像填充 (不要删除被缩进的注释符号):
