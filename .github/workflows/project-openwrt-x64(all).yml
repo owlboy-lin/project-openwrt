@@ -496,11 +496,6 @@ jobs:
       - name: Prepare artifact
         run: find ./bin/targets/ -type d -name "packages" | xargs rm -rf {}
 
-      - name: Checkout
-        uses: actions/checkout@master
-        with:
-          ref: master
-
       - name: Assemble Artifact
         id: assemble_artifact
         env:
