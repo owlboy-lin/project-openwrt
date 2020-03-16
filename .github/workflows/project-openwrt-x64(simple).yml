@@ -26,7 +26,9 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    
+    if: github.event.repository.owner.id == github.event.sender.id
+    
     steps:
 
       - name: Checkout
@@ -178,7 +180,7 @@ jobs:
           # CONFIG_PACKAGE_luci-app-acme is not set
           # CONFIG_PACKAGE_luci-app-adblock is not set
           CONFIG_PACKAGE_luci-app-adbyby-plus=y
-          CONFIG_PACKAGE_luci-app-adguardhome=y
+          # CONFIG_PACKAGE_luci-app-adguardhome is not set
           CONFIG_PACKAGE_luci-app-advanced-reboot=y
           # CONFIG_PACKAGE_luci-app-advancedsetting is not set
           # CONFIG_PACKAGE_luci-app-ahcp is not set
@@ -204,11 +206,11 @@ jobs:
           CONFIG_PACKAGE_luci-app-cifs=y
           # CONFIG_PACKAGE_luci-app-cjdns is not set
           # CONFIG_PACKAGE_luci-app-clamav is not set
-          CONFIG_PACKAGE_luci-app-clash=y
+          # CONFIG_PACKAGE_luci-app-clash is not set
           # CONFIG_PACKAGE_luci-app-commands is not set
-          # CONFIG_PACKAGE_luci-app-cpulimit is not set
+          CONFIG_PACKAGE_luci-app-cpulimit=y
           # CONFIG_PACKAGE_luci-app-cshark is not set
-          # CONFIG_PACKAGE_luci-app-cupsd is not set
+          CONFIG_PACKAGE_luci-app-cupsd=y
           CONFIG_PACKAGE_luci-app-ddns=y
           # CONFIG_PACKAGE_luci-app-diag-core is not set
           CONFIG_PACKAGE_luci-app-diskman=y
@@ -219,7 +221,7 @@ jobs:
           CONFIG_PACKAGE_luci-app-diskman_INCLUDE_kmod_md_linear=y
           # CONFIG_PACKAGE_luci-app-dnscrypt-proxy is not set
           # CONFIG_PACKAGE_luci-app-dnsforwarder is not set
-          CONFIG_PACKAGE_luci-app-dockerman=y
+          # CONFIG_PACKAGE_luci-app-dockerman is not set
           # CONFIG_PACKAGE_luci-app-dump1090 is not set
           # CONFIG_PACKAGE_luci-app-dynapoint is not set
           # CONFIG_PACKAGE_luci-app-e2guardian is not set
@@ -233,7 +235,7 @@ jobs:
           # CONFIG_PACKAGE_luci-app-freifunk-diagnostics is not set
           # CONFIG_PACKAGE_luci-app-freifunk-policyrouting is not set
           # CONFIG_PACKAGE_luci-app-freifunk-widgets is not set
-          # CONFIG_PACKAGE_luci-app-frpc is not set
+          CONFIG_PACKAGE_luci-app-frpc=y
           # CONFIG_PACKAGE_luci-app-frps is not set
           # CONFIG_PACKAGE_luci-app-fwknopd is not set
           # CONFIG_PACKAGE_luci-app-gost is not set
@@ -248,7 +250,7 @@ jobs:
           # CONFIG_PACKAGE_luci-app-kcptun is not set
           CONFIG_PACKAGE_luci-app-kodexplorer=y
           # CONFIG_PACKAGE_luci-app-koolproxy is not set
-          CONFIG_PACKAGE_luci-app-koolproxyR=y
+          # CONFIG_PACKAGE_luci-app-koolproxyR is not set
           # CONFIG_PACKAGE_luci-app-ksmbd is not set
           # CONFIG_PACKAGE_luci-app-lxc is not set
           # CONFIG_PACKAGE_luci-app-mentohust is not set
@@ -258,12 +260,12 @@ jobs:
           CONFIG_PACKAGE_luci-app-mjpg-streamer=y
           CONFIG_PACKAGE_luci-app-mwan3=y
           CONFIG_PACKAGE_luci-app-mwan3helper=y
-          # CONFIG_PACKAGE_luci-app-mwol is not set
+          CONFIG_PACKAGE_luci-app-mwol=y
           # CONFIG_PACKAGE_luci-app-n2n_v2 is not set
           CONFIG_PACKAGE_luci-app-netdata=y
-          # CONFIG_PACKAGE_luci-app-nfs is not set
+          CONFIG_PACKAGE_luci-app-nfs=y
           # CONFIG_PACKAGE_luci-app-nft-qos is not set
-          # CONFIG_PACKAGE_luci-app-ngrokc is not set
+          CONFIG_PACKAGE_luci-app-ngrokc=y
           # CONFIG_PACKAGE_luci-app-njitclient is not set
           CONFIG_PACKAGE_luci-app-nlbwmon=y
           # CONFIG_PACKAGE_luci-app-noddos is not set
@@ -281,7 +283,6 @@ jobs:
           # CONFIG_PACKAGE_luci-app-p910nd is not set
           # CONFIG_PACKAGE_luci-app-pagekitec is not set
           CONFIG_PACKAGE_luci-app-passwall=y
-
           #
           # Configuration
           #
@@ -427,6 +428,31 @@ jobs:
           # CONFIG_PACKAGE_luci-app-wrtbwmon is not set
           CONFIG_PACKAGE_luci-app-xlnetacc=y
           CONFIG_PACKAGE_luci-app-zerotier=y
+          EOF
+
+          # LuCI主题:
+          cat >> .config <<EOF
+          #
+          # 4. Themes
+          #
+          # CONFIG_PACKAGE_luci-theme-Butterfly is not set
+          CONFIG_PACKAGE_luci-theme-Butterfly-dark=y
+          # CONFIG_PACKAGE_luci-theme-argon is not set
+          # CONFIG_PACKAGE_luci-theme-argon-dark-mod is not set
+          # CONFIG_PACKAGE_luci-theme-argon-light-mod is not set
+          # CONFIG_PACKAGE_luci-theme-argon-mc is not set
+          # CONFIG_PACKAGE_luci-theme-argonv2 is not set
+          CONFIG_PACKAGE_luci-theme-argonv3=y
+          CONFIG_PACKAGE_luci-theme-atmaterial=y
+          CONFIG_PACKAGE_luci-theme-bootstrap=y
+          # CONFIG_PACKAGE_luci-theme-bootstrap-mod is not set
+          CONFIG_PACKAGE_luci-theme-darkmatter=y
+          CONFIG_PACKAGE_luci-theme-material=y
+          # CONFIG_PACKAGE_luci-theme-netgear is not set
+          CONFIG_PACKAGE_luci-theme-netgearv2=y
+          CONFIG_PACKAGE_luci-theme-opentomato=y
+          # CONFIG_PACKAGE_luci-theme-opentomcat is not set
+          CONFIG_PACKAGE_luci-theme-rosy=y
           EOF
 
           # 常用软件包:
