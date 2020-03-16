@@ -182,7 +182,7 @@ jobs:
           CONFIG_PACKAGE_luci-app-advanced-reboot=y
           CONFIG_PACKAGE_luci-app-advancedsetting=y
           # CONFIG_PACKAGE_luci-app-ahcp is not set
-          CONFIG_PACKAGE_luci-app-airwhu=y
+          # CONFIG_PACKAGE_luci-app-airwhu is not set
           # CONFIG_PACKAGE_luci-app-aliddns is not set
           CONFIG_PACKAGE_luci-app-amule=y
           CONFIG_PACKAGE_luci-app-appfilter=y
@@ -445,7 +445,7 @@ jobs:
           CONFIG_PACKAGE_luci-theme-darkmatter=y
           CONFIG_PACKAGE_luci-theme-material=y
           # CONFIG_PACKAGE_luci-theme-netgear is not set
-          # CONFIG_PACKAGE_luci-theme-netgearv2 is not set
+          CONFIG_PACKAGE_luci-theme-netgearv2=y
           CONFIG_PACKAGE_luci-theme-opentomato is not set
           CONFIG_PACKAGE_luci-theme-opentomcat=y
           # CONFIG_PACKAGE_luci-theme-rosy is not set
@@ -496,8 +496,38 @@ jobs:
       - name: Prepare artifact
         run: find ./bin/targets/ -type d -name "packages" | xargs rm -rf {}
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@master
+      - name: Checkout
+        uses: actions/checkout@master
         with:
-          name: OpenWrt firmware-project-openwrt-x64(all)
-          path: ./bin/targets/
+          ref: master
+
+      - name: Assemble Artifact
+        id: assemble_artifact
+        run: |
+          rm -rf ./artifact/
+          mkdir -p ./artifact/
+          touch ./artifact/test.txt
+          release_tag="project-openwrt-x64(all)-$(date +%Y-%m-%d-%H%M%S)"
+          zip -r artifact.zip ./artifact/
+          echo "##[set-output name=release_tag;]$release_tag"
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.assemble_artifact.outputs.release_tag }}
+          release_name: 自动发布 ${{ steps.assemble_artifact.outputs.release_tag }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: ./artifact.zip
+          asset_name: ${{ steps.assemble_artifact.outputs.release_tag }}-ROM.zip
+          asset_content_type: application/zip
