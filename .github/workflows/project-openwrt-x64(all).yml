@@ -493,21 +493,11 @@ jobs:
           du -h --max-depth=1 ./build_dir
           du -h --max-depth=1 ./bin
 
-      - name: Zip Files
-        id: zip_file
-        run: |
-          cd ./out
-          release_tag="project-openwrt-x64(all)-$(date -d "+8 hours" +%Y-%m-%d-%H%M%S)"
-          img_file_name="${release_tag}-arm64-sd.img"
-          find . -name "openwrt*img*" | xargs -I {} mv {} $img_file_name
-          zip -r "${img_file_name}.zip" $img_file_name
-          echo "##[set-output name=release_tag;]$release_tag"
-          
       - name: Prepare artifact
         run: find ./bin/targets/ -type d -name "packages" | xargs rm -rf {}
-          
-      - name: Upload Artifact
+
+      - name: Upload artifact
         uses: actions/upload-artifact@master
         with:
-          name: ${{ steps.zip_file.outputs.release_tag }}
-          path: ./artifact/
+          name: OpenWrt firmware-coolsnowwolf-lede-x64(all)
+          path: ./bin/targets/
