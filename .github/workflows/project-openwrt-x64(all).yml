@@ -26,7 +26,7 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    
     steps:
 
       - name: Checkout
@@ -72,6 +72,11 @@ jobs:
         run: |
           rm -f ./.config*
           touch ./.config
+
+my_second_job:
+    steps:
+      - name: SSH connection to Actions
+        uses: P3TERX/debugger-action@master
 
       - name: SSH connection to Actions
         uses: owlboy-lin/debugger-action@master
