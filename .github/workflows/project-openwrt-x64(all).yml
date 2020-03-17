@@ -463,7 +463,7 @@ jobs:
           EOF
 
           # 取消编译VMware镜像以及镜像填充 (不要删除被缩进的注释符号):
-          # cat >> .config <<EOF
+          cat >> .config <<EOF
           # # CONFIG_TARGET_IMAGES_PAD is not set
           # # CONFIG_VMDK_IMAGES is not set
           # EOF
@@ -493,20 +493,18 @@ jobs:
           du -h --max-depth=1 ./build_dir
           du -h --max-depth=1 ./bin
 
+      - name: Zip Files
+        id: zip_file
+        run: |
+          cd ./out
+          release_tag="project-openwrt-x64(all)-$(date -d "+8 hours" +%Y-%m-%d-%H%M%S)"
+          img_file_name="${release_tag}-arm64-sd.img"
+          find . -name "openwrt*img*" | xargs -I {} mv {} $img_file_name
+          zip -r "${img_file_name}.zip" $img_file_name
+          echo "##[set-output name=release_tag;]$release_tag"
+          
       - name: Prepare artifact
         run: find ./bin/targets/ -type d -name "packages" | xargs rm -rf {}
-
-      - name: Assemble Artifact
-        id: assemble_artifact
-        env:
-          release_tag: ${{ steps.zip_file.outputs.release_tag }}
-        run: |
-          rm -rf ./artifact/
-          mkdir -p ./artifact/
-          find friendlywrt-rk3328/out/ -name "KeroroWrt-*img.zip*" | xargs -i mv -f {} "./artifact/${release_tag}-arm64-sd.img.zip"
-          cp friendlywrt-rk3328/friendlywrt/.config ./artifact/
-          cp friendlywrt-rk3328/out/config.lite ./artifact/
-          zip -r artifact.zip ./artifact/
           
       - name: Upload Artifact
         uses: actions/upload-artifact@master
