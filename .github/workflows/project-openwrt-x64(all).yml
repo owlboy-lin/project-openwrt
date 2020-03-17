@@ -28,8 +28,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: SSH connection to Actions
-        uses: owlboy-lin/debugger-action@master
+
 
       - name: Checkout
         uses: actions/checkout@master
@@ -75,6 +74,9 @@ jobs:
           rm -f ./.config*
           touch ./.config
 
+      - name: SSH connection to Actions
+        uses: owlboy-lin/debugger-action@master
+        
           #
           # ========================固件定制部分========================
           # 
