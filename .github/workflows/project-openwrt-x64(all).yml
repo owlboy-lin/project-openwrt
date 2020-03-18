@@ -483,10 +483,9 @@ jobs:
           # img_file_name="${release_tag}.img"
           # find . -name "*combined*img*" | xargs -I {} mv {} $img_file_name
           # tar -zcvf "${img_file_name}.gz" $img_file_name
-          # echo "##[set-output name=release_tag;]$release_tag"
-
-      # - name: SSH connection to Actions
-        # uses: P3TERX/debugger-action@master
+          
+      - name: SSH connection to Actions
+        uses: P3TERX/debugger-action@master
  
       - name: Save config.lite
         run: |
