@@ -492,14 +492,14 @@ jobs:
           du -h --max-depth=1 ./build_dir
           du -h --max-depth=1 ./bin
 
-      # - name: Zip Files
-        # id: zip_file
-        # run: |
-          # cd /project-openwrt/out
-          # release_tag="project-openwrt-$(date -d "+8 hours" +%Y-%m-%d-%H%M%S)"
-          # img_file_name="${release_tag}.img"
-          # find . -name "*combined*img*" | xargs -I {} mv {} $img_file_name
-          # tar -zcvf "${img_file_name}.gz" $img_file_name
+      - name: Zip Files
+        id: zip_file
+        run: |
+          cd openwrt/out
+          release_tag="project-openwrt-$(date -d "+8 hours" +%Y-%m-%d-%H%M%S)"
+          img_file_name="${release_tag}.img"
+          find . -name "*combined*img*" | xargs -I {} mv {} $img_file_name
+          tar -zcvf "${img_file_name}.gz" $img_file_name
           
       # - name: SSH connection to Actions
         # uses: P3TERX/debugger-action@master
@@ -518,11 +518,11 @@ jobs:
         run: |
           rm -rf ./artifact/
           mkdir -p ./artifact/
-          find project-openwrt/out/ -name "project-openwrt*combined*img.gz*" | xargs -i mv -f {} "./artifact/project-openwrt-$(date -d "+8 hours" +%Y-%m-%d-%H%M%S).img.gz"
-          find project-openwrt/project-openwrt/bin/targets/ -name "config.seed" | xargs -i mv -f {} ./artifact/
-          find project-openwrt/project-openwrt/bin/targets/ -name "sha256sums" | xargs -i mv -f {} ./artifact/
-          cp project-openwrt/project-openwrt/.config ./artifact/
-          cp project-openwrt/out/config.lite ./artifact/
+          find openwrt/out/ -name "project-openwrt*combined*img.gz*" | xargs -i mv -f {} ./artifact/
+          find openwrt/bin/targets/ -name "config.seed" | xargs -i mv -f {} ./artifact/
+          find openwrt/bin/targets/ -name "sha256sums" | xargs -i mv -f {} ./artifact/
+          cp openwrt/.config ./artifact/
+          cp openwrt/out/config.lite ./artifact/
           zip -r artifact.zip ./artifact/
       - name: Upload Artifact
         uses: actions/upload-artifact@master
