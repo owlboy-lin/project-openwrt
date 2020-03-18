@@ -475,6 +475,16 @@ jobs:
           sed -i 's/^[ \t]*//g' ./.config
           make defconfig
 
+      - name: Zip Files
+        id: zip_file
+        run: |
+          cd project-openwrt/out
+          release_tag="project-openwrt-$(date -d "+8 hours" +%Y-%m-%d-%H%M%S)"
+          img_file_name="${release_tag}.img"
+          find . -name "*combined*img*" | xargs -I {} mv {} $img_file_name
+          zip -r "${img_file_name}.zip" $img_file_name
+          echo "##[set-output name=release_tag;]$release_tag"
+
       - name: Save config.lite
         run: |
           cd project-openwrt/project-openwrt
@@ -487,8 +497,7 @@ jobs:
         run: |
           rm -rf ./artifact/
           mkdir -p ./artifact/
-          find ./bin/targets/ -type d -name "packages" | xargs rm -rf {}
-          find project-openwrt/project-openwrt/bin/targets/ -name "*combined*img*" | xargs -I{} sh -c 'f=$(basename $1); zip -r -j "./artifact/${f}.zip" $1' sh {} \;
+          find project-openwrt/out/ -name "project-openwrt*combined*img.zip*" | xargs -i mv -f {} "./artifact/${release_tag}.img.zip"
           find project-openwrt/project-openwrt/bin/targets/ -name "config.seed" | xargs -i mv -f {} ./artifact/
           find project-openwrt/project-openwrt/bin/targets/ -name "sha256sums" | xargs -i mv -f {} ./artifact/
           cp project-openwrt/project-openwrt/.config ./artifact/
