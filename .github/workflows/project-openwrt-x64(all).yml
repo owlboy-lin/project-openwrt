@@ -485,13 +485,15 @@ jobs:
           # tar -zcvf "${img_file_name}.gz" $img_file_name
           # echo "##[set-output name=release_tag;]$release_tag"
 
+      - name: SSH connection to Actions
+        uses: P3TERX/debugger-action@master
+ 
       - name: Save config.lite
         run: |
           cd project-openwrt/project-openwrt
           ./scripts/diffconfig.sh > ../out/config.lite
           
-      - name: SSH connection to Actions
-        uses: P3TERX/debugger-action@master
+
           
       - name: Assemble Artifact
         id: assemble_artifact
