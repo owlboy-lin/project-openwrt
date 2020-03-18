@@ -11,13 +11,13 @@
 name: project-openwrt-x64(simple)
 
 on:
-  push:
-    branches: 
-      - master
+  # push:
+    # branches: 
+      # - master
   schedule:
     - cron: 30 19 * * *
-  release:
-    types: [published]
+  # release:
+    # types: [published]
   watch:
     types: [started]
 
