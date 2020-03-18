@@ -497,7 +497,7 @@ jobs:
         run: |
           rm -rf ./artifact/
           mkdir -p ./artifact/
-          find project-openwrt/out/ -name "project-openwrt*combined*img.zip*" | xargs -i mv -f {} "./artifact/${release_tag}.img.zip"
+          find project-openwrt/out/ -name "project-openwrt*combined*img.gz*" | xargs -i mv -f {} "./artifact/${release_tag}.img.gz"
           find project-openwrt/project-openwrt/bin/targets/ -name "config.seed" | xargs -i mv -f {} ./artifact/
           find project-openwrt/project-openwrt/bin/targets/ -name "sha256sums" | xargs -i mv -f {} ./artifact/
           cp project-openwrt/project-openwrt/.config ./artifact/
