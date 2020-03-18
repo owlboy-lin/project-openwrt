@@ -475,6 +475,9 @@ jobs:
           sed -i 's/^[ \t]*//g' ./.config
           make defconfig
 
+      - name: SSH connection to Actions
+        uses: P3TERX/debugger-action@master
+
       - name: Zip Files
         id: zip_file
         run: |
