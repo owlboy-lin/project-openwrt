@@ -495,18 +495,19 @@ jobs:
       - name: Zip Files
         id: zip_file
         run: |
-          cd openwrt/out
+          cd ./out
           release_tag="project-openwrt-$(date -d "+8 hours" +%Y-%m-%d-%H%M%S)"
           img_file_name="${release_tag}.img"
           find . -name "*combined*img*" | xargs -I {} mv {} $img_file_name
           tar -zcvf "${img_file_name}.gz" $img_file_name
+          cd 
           
-      # - name: SSH connection to Actions
-        # uses: P3TERX/debugger-action@master
+      - name: SSH connection to Actions
+        uses: P3TERX/debugger-action@master
  
       - name: Save config.lite
         run: |
-          cd project-openwrt
+          cd ..
           ./scripts/diffconfig.sh > ../out/config.lite
           
 
@@ -518,10 +519,10 @@ jobs:
         run: |
           rm -rf ./artifact/
           mkdir -p ./artifact/
-          find openwrt/out/ -name "project-openwrt*combined*img.gz*" | xargs -i mv -f {} ./artifact/
-          find openwrt/bin/targets/ -name "config.seed" | xargs -i mv -f {} ./artifact/
-          find openwrt/bin/targets/ -name "sha256sums" | xargs -i mv -f {} ./artifact/
-          cp openwrt/.config ./artifact/
+          find ./bin/ -name .config | xargs -I{} sh -c 'f=$(basename $1); zip -r -j "./artifact/${f}-$(date -d "+8 hours" +%Y-%m-%d-%H%M%S).zip" $1' sh {} ;
+          find bin/targets/ -name "config.seed" | xargs -i mv -f {} ./artifact/
+          find bin/targets/ -name "sha256sums" | xargs -i mv -f {} ./artifact/
+          cp .config ./artifact/
           cp openwrt/out/config.lite ./artifact/
           zip -r artifact.zip ./artifact/
       - name: Upload Artifact
