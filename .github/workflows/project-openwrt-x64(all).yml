@@ -512,7 +512,8 @@ jobs:
         run: |
           rm -rf ./artifact/
           mkdir -p ./artifact/
-          find ./bin/targets/ -name .config | xargs -I{} sh -c 'f=$(basename $1); zip -r -j "./artifact/${f}-$(date -d "+8 hours" +%Y-%m-%d-%H%M%S).zip" $1' sh {} ;
+          find ./bin/targers/ -name "project-openwrt*img.gz" | xargs -i mv -f {} "./artifact/${release_tag}.zip"
+          find ./bin/targets/ -name .config | xargs -i mv -f {} ./artifact/
           find ./bin/targets/ -name "config.seed" | xargs -i mv -f {} ./artifact/
           find ./bin/targets/ -name "sha256sums" | xargs -i mv -f {} ./artifact/
           cp .config ./artifact/
