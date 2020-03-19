@@ -11,11 +11,11 @@
 name: project-openwrt-x64(all)
 
 on:
-  push:
-    branches: 
-      - master
+  # push:
+    # branches: 
+      # - master
   schedule:
-    - cron: 30 19 * * *
+    - cron: 0 20 * * *
   release:
     types: [published]
   watch:
