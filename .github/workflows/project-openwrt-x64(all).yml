@@ -499,8 +499,7 @@ jobs:
           release_tag="project-openwrt-$(date -d "+8 hours" +%Y-%m-%d-%H%M%S)"
           img_file_name="${release_tag}.img"
           find . -name "*combined*img*" | xargs -I {} mv {} $img_file_name
-          tar -zcvf "${img_file_name}.gz" $img_file_name
-          cd 
+          tar -zcvf "${img_file_name}.gz" $img_file_name          
           
       - name: SSH connection to Actions
         uses: P3TERX/debugger-action@master
